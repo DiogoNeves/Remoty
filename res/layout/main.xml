@@ -10,9 +10,9 @@
         android:text="@string/hello" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pause/Play" />
+        android:text="Start" />
 
 </LinearLayout>
