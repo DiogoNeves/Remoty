@@ -9,7 +9,8 @@ Use your keyboard media keys to control your smartphone's media player, when con
 1. Start the app
 2. Press start button
 3. `telnet locahost 3232`
-4. Type a valid, case-sensitive, command (followed by line break)
+4. type `1234` and return (later this key will be generated)
+5. Type a valid, case-sensitive, command (followed by line break)
   - **PP** play/pause
   - **P** previous
   - **N** next

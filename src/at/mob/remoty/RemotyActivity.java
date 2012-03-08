@@ -68,26 +68,29 @@ public class RemotyActivity extends Activity {
 	
 			if (client != null) {
 				mHandler.post(setConnected);
-				String data = null;
-				AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-				boolean muteState = false;
 				
-				while (reader.hasNext()) {
-					data = reader.nextLine();
+				if (reader.hasNext() && reader.next().equals("1234")) {
+					String data = null;
+					AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+					boolean muteState = false;
 					
-					if (data.equals("PP")) {
-						pressMediaKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-					} else if (data.equals("N")) {
-						pressMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT);
-					} else if (data.equals("P")) {
-						pressMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-					} else if (data.equals("VU")) {
-						audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
-					} else if (data.equals("VD")) {
-						audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
-					} else if (data.equals("M")) {
-						muteState = !muteState;
-						audioManager.setStreamMute(AudioManager.STREAM_MUSIC, muteState);
+					while (reader.hasNext()) {
+						data = reader.nextLine();
+						
+						if (data.equals("PP")) {
+							pressMediaKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+						} else if (data.equals("N")) {
+							pressMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT);
+						} else if (data.equals("P")) {
+							pressMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+						} else if (data.equals("VU")) {
+							audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
+						} else if (data.equals("VD")) {
+							audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
+						} else if (data.equals("M")) {
+							muteState = !muteState;
+							audioManager.setStreamMute(AudioManager.STREAM_MUSIC, muteState);
+						}
 					}
 				}
 				
