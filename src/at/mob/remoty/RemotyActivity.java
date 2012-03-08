@@ -1,7 +1,6 @@
 package at.mob.remoty;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -9,6 +8,7 @@ import java.util.Scanner;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -30,6 +30,7 @@ public class RemotyActivity extends Activity {
         mStart = (Button)findViewById(R.id.start);
         mStart.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				getStart().setEnabled(false);
 				new Thread(startServer).start();
 			}
         });
@@ -51,7 +52,7 @@ public class RemotyActivity extends Activity {
 	    	
 			try {
 				server = new ServerSocket(3232);
-				server.setSoTimeout(10000 * 1000);
+				server.setSoTimeout(10 * 1000);
 	
 				// wait for connection
 				client = server.accept();
@@ -68,18 +69,32 @@ public class RemotyActivity extends Activity {
 			if (client != null) {
 				mHandler.post(setConnected);
 				String data = null;
+				AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+				boolean muteState = false;
 				
 				while (reader.hasNext()) {
 					data = reader.nextLine();
 					
 					if (data.equals("PP")) {
 						pressMediaKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+					} else if (data.equals("N")) {
+						pressMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT);
+					} else if (data.equals("P")) {
+						pressMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+					} else if (data.equals("VU")) {
+						audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
+					} else if (data.equals("VD")) {
+						audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
+					} else if (data.equals("M")) {
+						muteState = !muteState;
+						audioManager.setStreamMute(AudioManager.STREAM_MUSIC, muteState);
 					}
 				}
 				
 				closeClient(client);
-				mHandler.post(setDisconnected);
 			}
+			
+			mHandler.post(setDisconnected);
     	}
     };
     
@@ -103,7 +118,6 @@ public class RemotyActivity extends Activity {
     
     private Runnable setConnected = new Runnable() {
 		public void run() {
-			getStart().setEnabled(false);
 			Toast.makeText(getBaseContext(), "Connected!", Toast.LENGTH_SHORT).show();
 		}
 	};
